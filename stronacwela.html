@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanie Uciekanie</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #020205;
+    --card-bg: rgba(10, 10, 25, 0.9);
+    --neon-cyan: #f14848;
+    --neon-purple: #fd9c5b;
+    --text-main: #ffffff;
+    --text-muted: #ffc400;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+    background-color: var(--bg-color);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(255, 0, 0, 0.15) 0px, transparent 40%),
+      radial-gradient(at 100% 100%, rgba(255, 217, 0, 0.15) 0px, transparent 40%);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: 100px;
+  }
+
+  h1 {
+    font-size: 4rem;
+    margin: 4rem 0;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    text-shadow: 0 0 30px var(--neon-cyan);
+    text-align: center;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+    max-width: 1800px;
+    padding: 0 40px;
+  }
+
+
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(25px);
+    border: 2px solid rgba(255, 74, 42, 0.2);
+    border-radius: 50px;
+    width: 360px; 
+    padding: 35px 25px;
+    box-shadow: 0 30px 80px rgba(0,0,0,1);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .card:hover {
+    transform: translateY(-20px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 60px rgba(255, 131, 131, 0.3);
+  }
+
+  
+  .avatar-container {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 30px;
+  }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--neon-cyan);
+    box-shadow: 0 0 40px var(--neon-cyan);
+  }
+
+  .nick {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+ 
+  .promo-tag {
+    font-size: 1.1rem;
+    color: var(--neon-purple);
+    border: 1px solid var(--neon-purple);   
+    padding: 10px 25px;
+    border-radius: 50px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 15px rgba(255, 60, 0, 0.3);
+    background: rgba(245, 159, 103, 0.05);
+  }
+
+  
+  .info-table {
+    width: 100%;
+    font-size: 1.3rem;
+  }
+
+  .info-row {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 0;
+  }
+
+  .info-label {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .info-value {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  
+  #toast {
+    visibility: hidden;
+    min-width: 300px;
+    background: #fff;
+    color: #000;
+    text-align: center;
+    border-radius: 10px;
+    padding: 20px;
+    position: fixed;
+    z-index: 1000;
+    bottom: 50px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 0 50px var(--neon-cyan);
+  }
+
+  #toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 50px; opacity: 1;} }
+  @keyframes fadeout { from {bottom: 50px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+</style>
+</head>
+<body>
+
+<h1>Tanie Uciekanie</h1>
+<h4>Kliknij w kafelek to skopiujesz numer :3</h4>
+<div class="grid" id="people-grid"></div>
+
+<div id="toast">SKOPIOWANO KONTAKT</div>
+
+<script>
+// DANE - TUTAJ EDYTUJESZ TEKSTY
+const people = [
+  { 
+    nick: "Max", 
+    img: "https://media.discordapp.net/attachments/1483837725336670210/1489704890379927622/image.png?ex=69d1634b&is=69d011cb&hm=2425ad9c944dc4ff1203d5738fe4cb8171f6e9decbe6cbb48de53721d85fc7ee&=&format=webp&quality=lossless&width=1150&height=750", 
+    tag: "Najlepsze Opinie 🔥", 
+    phone: "396464", 
+    stat: "94% 🔥", 
+    price: "Tracker: 800/1800" 
+  },
+  { 
+    nick: "Wiesiek", 
+    img: "https://media.discordapp.net/attachments/1483837725336670210/1489705046466625566/image.png?ex=69d16370&is=69d011f0&hm=e8d2abd459d6f4b4a7a3f21fd431bb3d2f939efac677b73beb82160a7c141239&=&format=webp&quality=lossless&width=823&height=823", 
+    tag: "Komendant", 
+    phone: "740331", 
+    stat: "30%", 
+    price: "Tracker: 500/800" 
+  },
+  { 
+    nick: "Burzuj", 
+    img: "https://media.discordapp.net/attachments/1483837725336670210/1489705543109972120/image.png?ex=69d163e6&is=69d01266&hm=ecab1b3f6ab9caff94dff12b2266615e74f34688229aaff55d9613583881983f&=&format=webp&quality=lossless&width=797&height=532", 
+    tag: "Dobre towarzystwo :>", 
+    phone: "798396", 
+    stat: "2%", 
+    price: "Tracker: 300/500" 
+  },
+{ 
+    nick: "Pazur", 
+    img: "https://media.discordapp.net/attachments/1483837725336670210/1489712089827377222/image.png?ex=69d169ff&is=69d0187f&hm=946fdc30c860d283ad17b5b1f211ff959f0f97d2465336843ac2993a709fceb3&=&format=webp&quality=lossless&width=607&height=546", 
+    tag: "Choruje na HIV", 
+    phone: "442644", 
+    stat: "20%", 
+    price: "Tracker: 500/800" 
+  },
+];
+
+const grid = document.getElementById('people-grid');
+const toast = document.getElementById('toast');
+
+function copy(text, name) {
+  navigator.clipboard.writeText(text);
+  toast.innerText = `SKOPIOWANO NUMER: ${name}`;
+  toast.className = "show";
+  setTimeout(() => { toast.className = ""; }, 3000);
+}
+
+function render() {
+  grid.innerHTML = "";
+  people.forEach(p => {
+    const card = document.createElement('div');
+    card.className = "card";
+    card.onclick = () => copy(p.phone, p.nick);
+    card.innerHTML = `
+      <div class="avatar-container">
+        <img src="${p.img}">
+      </div>
+      <div class="nick">${p.nick}</div>
+      <div class="promo-tag">${p.tag}</div>
+      
+      <div class="info-table">
+        <div class="info-row">
+          <span class="info-label">📞 KONTAKT</span>
+          <span class="info-value">${p.phone}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">📈 SKUTECZNOSC</span>
+          <span class="info-value">${p.stat}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">💰 CENA</span>
+          <span class="info-value">${p.price}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+render();
+</script>
+<h3>Ceny w zależności od pościgu - bez pościgu/z pościgiem</h3>
+</body>
+</html>
